@@ -3,21 +3,17 @@ services:
   frontend:
     build:
       context: ./frontend
+      target: production
     ports:
       - "80:3000"
     environment:
-      - NODE_ENV=production
+      NODE_ENV: production
 
   backend:
     build:
       context: ./backend
+      target: production
     ports:
-      - "5000:5000"
+      - "80:5000"
     environment:
-      - NODE_ENV=production
-
-  db:
-    environment:
-      POSTGRES_DB: yourdbname
-      POSTGRES_USER: yourdbuser
-      POSTGRES_PASSWORD: yourdbpassword
+      NODE_ENV: production

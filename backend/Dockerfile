@@ -1,17 +1,16 @@
-# Build stage
-FROM node:20 AS builder
+# Stage 1: Common base stage for installing dependencies
+FROM node:20 AS base
 WORKDIR /app
-COPY backend/package.json backend/package-lock.json* ./
+COPY package*.json ./
 RUN npm install
-COPY backend/ ./
+
+# Stage 2: Development build
+FROM base AS development
+COPY . .
+CMD ["npm", "run", "start:dev"]
+
+# Stage 3: Production build
+FROM base AS production
+COPY . .
 RUN npm run build
-
-# Production stage
-FROM node:20-alpine
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app/package.json ./
-RUN npm install --only=production
-COPY --from=builder /app/dist ./dist
-
 CMD ["node", "dist/main"]

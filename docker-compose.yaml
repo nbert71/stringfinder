@@ -3,29 +3,33 @@ services:
   frontend:
     build:
       context: ./frontend
+      target: development
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
+      NODE_ENV: development
+    env_file:
+      - ./frontend/.env
 
   backend:
     build:
       context: ./backend
+      target: development
     volumes:
       - ./backend:/app
       - /app/node_modules
     ports:
       - "5000:5000"
     environment:
-      - NODE_ENV=development
-    depends_on:
-      - db
+      NODE_ENV: development
+    env_file:
+      - ./backend/.env
 
   db:
-    image: postgres:latest
+    image: postgres
     environment:
       POSTGRES_DB: yourdbname
       POSTGRES_USER: yourdbuser
@@ -33,7 +37,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  db_data:
