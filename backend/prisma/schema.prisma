@@ -12,3 +12,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Instrument {
+  id         String      @id @default(uuid())
+  name       String
+  stringSets StringSet[]
+}
+
+model Brand {
+  id         String      @id @default(uuid())
+  name       String
+  models     Model[]
+  stringSets StringSet[]
+}
+
+model Model {
+  id         String      @id @default(uuid())
+  name       String
+  brand      Brand       @relation(fields: [brandId], references: [id])
+  brandId    String
+  stringSets StringSet[]
+}
+
+model Note {
+  id         String      @id @default(uuid())
+  name       String
+  stringSets StringSet[]
+}
+
+model Pattern {
+  id               String      @id @default(uuid())
+  name             String
+  filename         String
+  colorsNumber     Int
+  upperStringSets  StringSet[] @relation(name: "Upper Pattern")
+  bottomStringSets StringSet[] @relation(name: "Bottom Pattern")
+}
+
+model StringSet {
+  id              String     @id @default(uuid())
+  instrument      Instrument @relation(fields: [instrumentId], references: [id])
+  instrumentId    String
+  brand           Brand      @relation(fields: [brandId], references: [id])
+  brandId         String
+  model           Model      @relation(fields: [modelId], references: [id])
+  modelId         String
+  note            Note       @relation(fields: [noteId], references: [id])
+  noteId          String
+  tensionCategory String
+  tensionValue    Float
+  upperPattern    Pattern    @relation(name: "Upper Pattern", fields: [upperPatternId], references: [id])
+  upperPatternId  String
+  bottomPattern   Pattern    @relation(name: "Bottom Pattern", fields: [bottomPatternId], references: [id])
+  bottomPatternId String
+}
