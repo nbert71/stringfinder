@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y gosu
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
+RUN npx prisma generate
 
 # Stage 2: Development build
 FROM base AS development
